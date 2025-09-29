@@ -8,10 +8,12 @@ class OrderBook {
   private sellOrders: Order[] = [];
   private lastPrice: number; // store last or initial price for this pair
   private readonly _pairId: string;
+  private symbol: string;
 
-  constructor(pairId: string, initialPrice: number) {
+  constructor(pairId: string, initialPrice: number, symbol: string) {
     this._pairId = pairId;
     this.lastPrice = initialPrice;
+    this.symbol = symbol;
   }
 
   public get pairId(): string {
@@ -36,6 +38,14 @@ class OrderBook {
 
   private updateLastPrice(price: number) {
     this.lastPrice = price;
+  }
+
+  setMarketPrice(price: number): void {
+    this.lastPrice = price;
+  }
+
+  getSymbol(): string {
+    return this.symbol;
   }
 
   async addOrder(order: Order): Promise<void> {
