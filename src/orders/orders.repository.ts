@@ -14,12 +14,4 @@ export class OrdersRepository {
       where: { id: orderId },
     });
   }
-
-  async findByUser(userId: string) {
-    return await this.prisma.order.findMany({
-      where: { userId },
-      include: { pair: true },
-      orderBy: { createdAt: 'desc' },
-    });
-  }
 }
