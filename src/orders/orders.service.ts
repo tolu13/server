@@ -23,4 +23,9 @@ export class OrdersService {
     return `This action removes a #${id} order`;
   }
     */
+
+  async findByUser(userId: string) {
+    console.log(userId);
+    return await this.repo.findByUser(userId);
+  }
 }

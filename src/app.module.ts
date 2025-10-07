@@ -13,6 +13,7 @@ import { TradingpairModule } from './tradingpair/tradingpair.module';
 import { WalletModule } from './wallet/wallet.module';
 import { CandlesModule } from './candles/candles.module';
 import { CandlesService } from './candles/candles.service';
+import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CandlesService } from './candles/candles.service';
     TradingpairModule,
     WalletModule,
     CandlesModule,
+    TransactionsModule,
   ],
   controllers: [AppController],
   providers: [AppService, OrderBookGateway, OrderBook, CandlesService],
