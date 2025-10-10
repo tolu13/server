@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Trade } from 'src/orders/entities/order';
 
 interface Candle {
+  openTime: string | number;
   time: number; // e.g. Date.getTime() rounded to minute
   open: number;
   high: number;
@@ -22,6 +23,7 @@ export class CandlesService {
     if (!lastCandle || lastCandle.time !== bucketTime) {
       // Start a new candle
       const newCandle: Candle = {
+        openTime: trade.timestamp.getTime(),
         time: bucketTime,
         open: trade.price,
         high: trade.price,
