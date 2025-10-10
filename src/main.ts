@@ -11,7 +11,10 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
-  app.enableCors();
+  app.enableCors({
+    origin: 'http://localhost:5173', 'https://nexatrade-weld.vercel.app/'// ✅ exact frontend URL
+    credentials: true,
+  });
   await app.listen(process.env.PORT ?? 5000);
 }
 bootstrap();

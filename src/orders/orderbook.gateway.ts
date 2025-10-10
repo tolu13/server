@@ -13,7 +13,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @WebSocketGateway({
   namespace: '/orderbook',
-  cors: { origin: 'http://localhost:5173', credentials: true },
+  cors: {
+    origin: ['http://localhost:5173', 'https://nexatrade-weld.vercel.app/'],
+    credentials: true,
+  },
 })
 export class OrderBookGateway {
   @WebSocketServer()
@@ -76,6 +79,19 @@ export class OrderBookGateway {
   handleConnection(client: Socket) {
     console.log('Client connected:', client.id);
 
+    const tradingPairs = Array.from(this.orderBooks.entries()).map(
+      ([pairId, orderBook]) => ({
+        id: pairId,
+        symbol: orderBook.getSymbol(),
+        lastPrice: orderBook.getMarketPrice(),
+        change: +(Math.random() * 2 - 1).toFixed(2), // random ±%
+        volume: +(Math.random() * 1000).toFixed(2),
+      }),
+    );
+
+    // ✅ Send trading pairs immediately after connection
+    client.emit('tradingpairs', tradingPairs);
+
     const allOrderBooks = Array.from(this.orderBooks.entries()).map(
       ([pairId, orderBook]) => ({
         pairId,
@@ -128,5 +144,17 @@ export class OrderBookGateway {
       throw new Error(`OrderBook not found for pairId: ${pairId}`);
 
     return { price: orderBook.getMarketPrice(), pairId };
+  }
+
+  @SubscribeMessage('getCandles')
+  async handleGetCandles(@MessageBody() pairId: string) {
+    const candles = await this.CandlesService.getCandles(pairId, 50); // last 50 candles
+    return candles.map((c) => ({
+      x: new Date(c.openTime).getTime(),
+      o: c.open,
+      h: c.high,
+      l: c.low,
+      c: c.close,
+    }));
   }
 }
