@@ -14,7 +14,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @WebSocketGateway({
   namespace: '/orderbook',
   cors: {
-    origin: ['http://localhost:5173', 'https://nexatrade-weld.vercel.app/'],
+    origin: ['http://localhost:5173', 'https://nexatrade-weld.vercel.app'],
     credentials: true,
   },
 })
