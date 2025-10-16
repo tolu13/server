@@ -147,8 +147,8 @@ export class OrderBookGateway {
   }
 
   @SubscribeMessage('getCandles')
-  async handleGetCandles(@MessageBody() pairId: string) {
-    const candles = await this.candleService.getCandles(pairId, 50); // last 50 candles
+  handleGetCandles(@MessageBody() pairId: string) {
+    const candles = this.candleService.getCandles(pairId, 50); // last 50 candles
     return candles.map((c) => ({
       x: new Date(c.openTime).getTime(),
       o: c.open,
