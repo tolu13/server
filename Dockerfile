@@ -1,41 +1,40 @@
 # ---------------------------------------------
-# 1. Base image
+# 1. Base Build Stage
 # ---------------------------------------------
 FROM node:18-alpine AS builder
 
-# Set working directory
 WORKDIR /app
 
-# Copy package files and install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
-# Copy all source code
 COPY . .
 
-# Generate Prisma client
+# Generate Prisma client and build
 RUN npx prisma generate
-
-# Build the NestJS project
 RUN npm run build
 
+
 # ---------------------------------------------
-# 2. Production image
+# 2. Production Stage
 # ---------------------------------------------
 FROM node:18-alpine AS runner
+
 WORKDIR /app
 
-# Copy only necessary build artifacts
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/node_modules ./node_modules
+# Install only production dependencies
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Copy built artifacts and prisma files
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
-# Expose the app port
+# Expose port (Render automatically detects it)
 EXPOSE 5000
 
-# Set environment variables
 ENV NODE_ENV=production
 
-# Run Prisma migrations and start the app
+# Run Prisma migrations and start app
 CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]
