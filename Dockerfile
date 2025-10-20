@@ -37,4 +37,4 @@ EXPOSE 5000
 ENV NODE_ENV=production
 
 # Run Prisma migrations and start app
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main.js"]
