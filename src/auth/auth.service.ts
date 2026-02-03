@@ -32,7 +32,9 @@ export class AuthService {
   async login(loginDto: loginDto) {
     const user = await this.repo.Login(loginDto);
     //const {email, password} = loginDto;
-
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
     const comparePassword = await bcrypt.compare(
       loginDto.password,
       user.password,
