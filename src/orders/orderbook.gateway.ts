@@ -32,7 +32,7 @@ export class OrderBookGateway {
     this.simulateMarketPrices(); // 🔥 Start simulation loop
   }
 
-  private async initOrderBooks() {
+  async initOrderBooks() {
     const pairs = await this.prisma.tradingPair.findMany();
 
     for (const pair of pairs) {
