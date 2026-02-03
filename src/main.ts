@@ -12,8 +12,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: false });
 
   const allowedOrigins = [
-     'http://localhost:5173',
     'https://nexatrade-weld.vercel.app',
+    'http://localhost:5173',
   ];
 
   // ✅ Use express cors middleware before everything else
@@ -25,7 +25,7 @@ async function bootstrap() {
           return callback(null, true);
         } else {
           console.warn('❌ Blocked by CORS:', origin);
-          return callback(new Error('Not allowed by CORS'));
+          return callback(null, false);
         }
       },
       credentials: true,
@@ -34,8 +34,6 @@ async function bootstrap() {
       optionsSuccessStatus: 204,
     }),
   );
-
-  
 
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
 
