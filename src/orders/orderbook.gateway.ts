@@ -34,6 +34,7 @@ export class OrderBookGateway {
 
   async initOrderBooks() {
     const pairs = await this.prisma.tradingPair.findMany();
+    console.log('Trading pairs count:', pairs.length);
 
     for (const pair of pairs) {
       const initialPrice = this.getInitialPrice(pair.symbol);
